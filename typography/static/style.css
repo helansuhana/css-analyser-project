@@ -1,0 +1,59 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #F6E6D7; /* pastel beige */
+    color: #000000;
+}
+
+/* HEADER */
+
+header {
+    background-color: #A8E6CF; /* pastel aqua */
+    text-align: center;
+    padding: 35px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 34px;
+}
+
+header p {
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+/* HERO SECTION */
+
+.hero {
+    text-align: center;
+    padding: 90px 20px;
+    background-color: #DCEDC1; /* pastel green */
+}
+
+/* BUTTON AREA */
+
+.home-buttons {
+    margin-top: 40px;
+}
+
+/* BUTTON STYLE */
+
+button {
+    background-color: #FFD3B6; /* pastel amber */
+    color: black;
+    border: none;
+    padding: 14px 30px;
+    margin: 10px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* BUTTON HOVER */
+
+button:hover {
+    background-color: #FFAAA5; /* pastel pink */
+    transform: translateY(-2px);
+}

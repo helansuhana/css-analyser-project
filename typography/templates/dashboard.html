@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<title>CSS Visualization Dashboard</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+body{
+margin:0;
+font-family:Segoe UI, sans-serif;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;
+}
+
+/* NAVBAR */
+
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:18px 60px;
+background:rgba(0,0,0,0.35);
+backdrop-filter:blur(8px);
+}
+
+.logo{
+font-size:22px;
+font-weight:600;
+}
+
+.nav-links a{
+text-decoration:none;
+color:white;
+margin-left:25px;
+font-size:15px;
+}
+
+/* HEADER */
+
+.header{
+text-align:center;
+margin-top:70px;
+}
+
+.header h1{
+font-size:38px;
+margin-bottom:10px;
+}
+
+.subtitle{
+color:#ccc;
+margin-bottom:40px;
+}
+
+/* INPUTS */
+
+.compare-inputs{
+display:flex;
+justify-content:center;
+gap:15px;
+flex-wrap:wrap;
+margin-bottom:40px;
+}
+
+.input-box{
+width:350px;
+padding:14px;
+border-radius:8px;
+border:none;
+font-size:16px;
+outline:none;
+}
+
+.analyze-btn{
+padding:14px 26px;
+background:#00c6ff;
+border:none;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+color:white;
+}
+
+.analyze-btn:hover{
+background:#0072ff;
+}
+
+/* LOADER */
+
+.loader{
+margin:30px auto;
+border:6px solid rgba(255,255,255,0.2);
+border-top:6px solid #00c6ff;
+border-radius:50%;
+width:45px;
+height:45px;
+animation:spin 1s linear infinite;
+display:none;
+}
+
+@keyframes spin{
+100%{transform:rotate(360deg);}
+}
+
+/* CHART */
+
+.chart-section{
+width:70%;
+margin:50px auto;
+}
+
+.chart-card{
+background:rgba(255,255,255,0.08);
+padding:30px;
+border-radius:12px;
+box-shadow:0 4px 20px rgba(0,0,0,0.3);
+}
+
+.chart-card h3{
+text-align:center;
+margin-bottom:20px;
+}
+
+/* ABOUT */
+
+.about{
+width:70%;
+margin:80px auto;
+text-align:center;
+color:#ccc;
+line-height:1.6;
+}
+
+/* FOOTER */
+
+.footer{
+text-align:center;
+margin:60px 0;
+color:#aaa;
+font-size:14px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<div class="navbar">
+
+<div class="logo">CSS Analyzer</div>
+
+<div class="nav-links">
+<a href="/">Home</a>
+<a href="/extract">Extract</a>
+<a href="/classify">Classification</a>
+<a href="/dashboard">Dashboard</a>
+</div>
+
+</div>
+
+<!-- HEADER -->
+
+<div class="header">
+
+<h1>Website CSS Comparison Dashboard</h1>
+
+<p class="subtitle">
+Compare design structure between two websites
+</p>
+
+<div class="compare-inputs">
+
+<input id="url1" class="input-box" placeholder="Website 1 URL (example: https://example.com)">
+
+<input id="url2" class="input-box" placeholder="Website 2 URL (example: https://example.com)">
+
+<button class="analyze-btn" onclick="compareWebsites()">
+Compare Websites
+</button>
+
+</div>
+
+<div id="loader" class="loader"></div>
+
+</div>
+
+<!-- CHART -->
+
+<div id="chartSection" class="chart-section" style="display:none">
+
+<div class="chart-card">
+
+<h3>CSS Structure Comparison</h3>
+
+<canvas id="comparisonChart"></canvas>
+
+</div>
+
+</div>
+
+<!-- ABOUT -->
+
+<div class="about">
+
+<h3>About Visualization</h3>
+
+<p>
+
+The visualization dashboard compares the CSS structure of two websites.
+Instead of manually inspecting styles through browser developer tools,
+this tool highlights differences in layout systems, typography usage,
+color rules, box model properties, flex/grid layouts, and animation usage.
+
+This helps developers and researchers understand how design techniques
+vary between websites and how complex different interfaces are.
+
+</p>
+
+</div>
+
+<!-- FOOTER -->
+
+<div class="footer">
+Developed for educational and research purposes
+</div>
+
+<script>
+
+async function compareWebsites(){
+
+let url1=document.getElementById("url1").value;
+let url2=document.getElementById("url2").value;
+
+if(!url1 || !url2){
+alert("Please enter both website URLs");
+return;
+}
+
+document.getElementById("loader").style.display="block";
+
+let res1=await fetch("/analyze",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({website:url1})
+});
+
+let data1=await res1.json();
+
+let res2=await fetch("/analyze",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({website:url2})
+});
+
+let data2=await res2.json();
+
+document.getElementById("loader").style.display="none";
+
+document.getElementById("chartSection").style.display="block";
+
+new Chart(document.getElementById("comparisonChart"),{
+
+type:"bar",
+
+data:{
+
+labels:[
+"Layout",
+"Typography",
+"Colors",
+"Box Model",
+"Flex/Grid",
+"Animation"
+],
+
+datasets:[
+
+{
+label:"Website 1",
+data:[
+data1.layout.length,
+data1.typography.length,
+data1.colors.length,
+data1.box.length,
+data1.flex.length,
+data1.animation.length
+],
+backgroundColor:"#00c6ff"
+},
+
+{
+label:"Website 2",
+data:[
+data2.layout.length,
+data2.typography.length,
+data2.colors.length,
+data2.box.length,
+data2.flex.length,
+data2.animation.length
+],
+backgroundColor:"#ff9f43"
+}
+
+]
+
+},
+
+options:{
+responsive:true,
+plugins:{
+legend:{
+labels:{color:"white"}
+}
+},
+scales:{
+x:{
+ticks:{color:"white"}
+},
+y:{
+ticks:{color:"white"}
+}
+}
+}
+
+});
+
+}
+
+</script>
+
+</body>
+</html>

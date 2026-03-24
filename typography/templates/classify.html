@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<title>CSS Classification Engine</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<style>
+
+body{
+margin:0;
+font-family:Segoe UI, sans-serif;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;
+}
+
+/* NAVBAR */
+
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:18px 60px;
+background:rgba(0,0,0,0.35);
+backdrop-filter:blur(8px);
+}
+
+.logo{
+font-size:22px;
+font-weight:600;
+}
+
+.nav-links a{
+text-decoration:none;
+color:white;
+margin-left:25px;
+font-size:15px;
+}
+
+/* HEADER */
+
+.header{
+text-align:center;
+margin-top:80px;
+}
+
+.header h1{
+font-size:38px;
+margin-bottom:10px;
+}
+
+.subtitle{
+color:#ccc;
+margin-bottom:40px;
+}
+
+/* INPUT */
+
+.input-box{
+width:450px;
+padding:14px;
+border-radius:8px;
+border:none;
+font-size:16px;
+outline:none;
+}
+
+.analyze-btn{
+margin-left:10px;
+padding:14px 26px;
+background:#00c6ff;
+border:none;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+color:white;
+}
+
+.analyze-btn:hover{
+background:#0072ff;
+}
+
+/* LOADER */
+
+.loader{
+margin:30px auto;
+border:6px solid rgba(255,255,255,0.2);
+border-top:6px solid #00c6ff;
+border-radius:50%;
+width:45px;
+height:45px;
+animation:spin 1s linear infinite;
+display:none;
+}
+
+@keyframes spin{
+100%{transform:rotate(360deg);}
+}
+
+/* DASHBOARD GRID */
+
+.results{
+width:85%;
+margin:60px auto;
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:25px;
+}
+
+/* CARDS */
+
+.card{
+background:rgba(255,255,255,0.08);
+padding:25px;
+border-radius:12px;
+text-align:center;
+box-shadow:0 4px 20px rgba(0,0,0,0.2);
+}
+
+.card h3{
+margin-top:0;
+font-size:18px;
+}
+
+.value{
+font-size:28px;
+margin-top:10px;
+color:#00c6ff;
+}
+
+/* ABOUT SECTION */
+
+.about{
+width:70%;
+margin:80px auto;
+text-align:center;
+line-height:1.6;
+color:#ccc;
+}
+
+/* FOOTER */
+
+.footer{
+text-align:center;
+margin:60px 0;
+color:#aaa;
+font-size:14px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<div class="navbar">
+
+<div class="logo">CSS Analyzer</div>
+
+<div class="nav-links">
+<a href="/">Home</a>
+<a href="/extract">Extract</a>
+<a href="/classify">Classification</a>
+<a href="/dashboard">Dashboard</a>
+</div>
+
+</div>
+
+<!-- HEADER -->
+
+<div class="header">
+
+<h1>CSS Classification Engine</h1>
+
+<p class="subtitle">
+Analyze website design patterns using extracted CSS
+</p>
+
+<input id="urlInput" class="input-box" placeholder="https://example.com">
+
+<button class="analyze-btn" onclick="classifyCSS()">
+Analyze Design
+</button>
+
+<div id="loader" class="loader"></div>
+
+</div>
+
+<!-- RESULTS -->
+
+<div id="results" class="results" style="display:none">
+
+<div class="card">
+<h3>Total Fonts Used</h3>
+<div id="fontCount" class="value"></div>
+</div>
+
+<div class="card">
+<h3>Total Colors Used</h3>
+<div id="colorCount" class="value"></div>
+</div>
+
+<div class="card">
+<h3>Animations Used</h3>
+<div id="animationCount" class="value"></div>
+</div>
+
+<div class="card">
+<h3>Flex/Grid Usage</h3>
+<div id="flexCount" class="value"></div>
+</div>
+
+<div class="card">
+<h3>Layout Properties Count</h3>
+<div id="layoutCount" class="value"></div>
+</div>
+
+<div class="card">
+<h3>Typography Properties Count</h3>
+<div id="typographyCount" class="value"></div>
+</div>
+
+<div class="card">
+<h3>Color Properties Count</h3>
+<div id="colorPropCount" class="value"></div>
+</div>
+
+<div class="card">
+<h3>Animation Properties Count</h3>
+<div id="animationPropCount" class="value"></div>
+</div>
+
+</div>
+
+<!-- ABOUT -->
+
+<div class="about">
+
+<h3>About CSS Classification</h3>
+
+<p>
+
+The CSS Classification Engine analyzes extracted CSS data and summarizes structural characteristics used in a website. By counting typography styles, color variations, layout rules, and animation usage, the system provides a structured overview of how design elements are implemented across the page. This helps developers and learners understand styling complexity and identify common design patterns used in modern web interfaces.
+
+</p>
+
+</div>
+
+<!-- FOOTER -->
+
+<div class="footer">
+Developed for educational and research purposes
+</div>
+
+<script>
+
+async function classifyCSS(){
+
+let url=document.getElementById("urlInput").value;
+
+if(!url){
+alert("Please enter a website URL");
+return;
+}
+
+document.getElementById("loader").style.display="block";
+
+let response=await fetch("/analyze",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({website:url})
+});
+
+let data=await response.json();
+
+document.getElementById("loader").style.display="none";
+
+if(data.error){
+alert("Error analyzing website");
+return;
+}
+
+document.getElementById("results").style.display="grid";
+
+/* STATISTICS */
+
+document.getElementById("fontCount").innerText =
+new Set(data.typography.map(x=>x.split(":")[1])).size;
+
+document.getElementById("colorCount").innerText =
+data.colors.length;
+
+document.getElementById("animationCount").innerText =
+data.animation.length;
+
+document.getElementById("flexCount").innerText =
+data.flex.length;
+
+/* PROPERTY COUNTS */
+
+document.getElementById("layoutCount").innerText =
+data.layout.length;
+
+document.getElementById("typographyCount").innerText =
+data.typography.length;
+
+document.getElementById("colorPropCount").innerText =
+data.colors.length;
+
+document.getElementById("animationPropCount").innerText =
+data.animation.length;
+
+}
+
+</script>
+
+</body>
+</html>

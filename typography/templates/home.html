@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<title>Website CSS Analyzer</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<style>
+
+body{
+margin:0;
+font-family:Segoe UI, sans-serif;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;
+}
+
+/* NAVBAR */
+
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:18px 60px;
+background:rgba(0,0,0,0.35);
+backdrop-filter:blur(8px);
+}
+
+.logo{
+font-size:22px;
+font-weight:600;
+}
+
+.nav-links a{
+text-decoration:none;
+color:white;
+margin-left:25px;
+font-size:15px;
+}
+
+/* HERO */
+
+.hero{
+text-align:center;
+margin-top:0;
+padding:120px 20px;
+
+background:linear-gradient(
+135deg,
+#1e3c72,
+#2a5298
+);
+
+box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
+
+
+.hero h1{
+font-size:48px;
+margin-bottom:20px;
+}
+
+.hero p{
+font-size:18px;
+color:#ddd;
+max-width:800px;
+margin:auto;
+line-height:1.6;
+}
+
+/* BUTTONS */
+
+.hero-buttons{
+margin-top:40px;
+}
+
+.hero-buttons button{
+
+padding:14px 28px;
+font-size:16px;
+border:none;
+border-radius:8px;
+margin:10px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.extract-btn{
+background:#00c6ff;
+color:white;
+}
+
+.extract-btn:hover{
+background:#0072ff;
+}
+
+.classify-btn{
+background:#ffffff22;
+color:white;
+}
+
+.classify-btn:hover{
+background:#ffffff33;
+}
+
+/* WHY SECTION */
+
+.why-section{
+margin-top:140px;
+text-align:center;
+padding:0 40px;
+}
+
+.why-section h2{
+font-size:32px;
+margin-bottom:20px;
+}
+
+.why-section p{
+max-width:900px;
+margin:auto;
+line-height:1.7;
+color:#ccc;
+font-size:17px;
+}
+
+/* FOOTER */
+
+.footer{
+margin-top:120px;
+text-align:center;
+color:#aaa;
+font-size:14px;
+padding-bottom:30px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<div class="navbar">
+
+<div class="logo">CSS Analyzer</div>
+
+<div class="nav-links">
+<a href="/">Home</a>
+<a href="/extract">Extract</a>
+<a href="/classify">Classification</a>
+<a href="/dashboard">Dashboard</a>
+</div>
+
+</div>
+
+<!-- HERO -->
+
+<div class="hero">
+
+<h1>Website CSS Analyzer</h1>
+
+<p>
+The Website CSS Analyzer is a developer-focused tool designed to explore and understand
+the design structure of any website. By simply entering a website URL, the system scans
+and extracts CSS styles used in the page and organizes them into meaningful categories
+such as layout, typography, colors, box model properties, and animations.
+</p>
+
+<div class="hero-buttons">
+
+<button class="extract-btn"
+onclick="window.location.href='/extract'">
+
+Extract CSS
+
+</button>
+
+<button class="classify-btn"
+onclick="window.location.href='/classify'">
+
+CSS Classification Engine
+
+</button>
+
+</div>
+
+</div>
+
+<!-- WHY SECTION -->
+
+<div class="why-section">
+
+<h2>Why This Tool Is Useful</h2>
+
+<p>
+
+Modern websites contain hundreds of CSS rules that define layout structures,
+typography systems, color palettes, and animation behavior. Manually inspecting
+these styles through browser developer tools can be time-consuming and difficult
+to interpret.
+
+The Website CSS Analyzer simplifies this process by automatically extracting
+and organizing CSS properties into structured panels and visual insights.
+This enables developers, students, and designers to better understand design
+patterns used across different websites and learn how professional interfaces
+are built.
+
+</p>
+
+</div>
+
+<!-- FOOTER -->
+
+<div class="footer">
+
+Developed for educational and research purposes
+
+</div>
+
+</body>
+</html>
